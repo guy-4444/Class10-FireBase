@@ -7,6 +7,9 @@ public class User {
     private boolean genger;
     private String img;
 
+    public User() {
+    }
+
     public User(String name, long id, boolean genger) {
         this.name = name;
         this.id = id;

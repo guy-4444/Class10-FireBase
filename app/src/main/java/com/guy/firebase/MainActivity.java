@@ -18,6 +18,9 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    ArrayList<User> users = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,38 +29,77 @@ public class MainActivity extends AppCompatActivity {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
 
-        User user = new User("Gadi", 111111666, false);
-        myRef.child("Users").child("Yeman").child("Petah-Tikva").child("" + user.getId()).setValue(user);
+        Log.d("pttt", "A - Number of users: " + users.size());
+
+        MyFirebase.getUsers(new CallBack_UsersReady() {
+            @Override
+            public void usersReady(ArrayList<User> users) {
+                refreshList(users);
+                Log.d("pttt", "C - Number of users: " + users.size());
+            }
+
+            @Override
+            public void error() {
+                // TODO: 2020-01-08 handle errors
+            }
+
+        });
+
+        Log.d("pttt", "B - Number of users: " + users.size());
+
+        /*
+
+//        User temp = new User();
+//        User user = new User("Gadi", 111111666, false);
+//        myRef.child("Users").child("Yeman").child("Petah-Tikva").child("" + user.getId()).setValue(user);
+//
+//
+//        User user2 = new User("Tomer", 111111777, false);
+//        myRef.child("Users").child("Russia").child("Ramat-Gan").child("" + user2.getId()).setValue(user2);
 
 
-        User user2 = new User("Tomer", 111111777, false);
-        myRef.child("Users").child("Russia").child("Ramat-Gan").child("" + user2.getId()).setValue(user2);
 
 
 
+//        Message message = new Message();
+//
+//        message = new Message()
+//                .setTimeStamp(System.currentTimeMillis())
+//                .setStatus(0)
+//                .setSender(user.getId())
+//                .setReceiver(user2.getId())
+//                .setContent("Hi Tomer4!");
+//
+//
+//        myRef.child("Chats").child(user.getId() + "-" + user2.getId()).push().setValue(message);
 
 
-        Message message = new Message();
-
-        message = new Message()
-                .setTimeStamp(System.currentTimeMillis())
-                .setStatus(0)
-                .setSender(user.getId())
-                .setReceiver(user2.getId())
-                .setContent("Hi Tomer4!");
-
-
-        myRef.child("Chats").child(user.getId() + "-" + user2.getId()).push().setValue(message);
-
-
-        myRef.child("Chats").child(user.getId() + "-" + user2.getId()).addValueEventListener(new ValueEventListener() {
+        myRef.child("Users").child("Israel").child("Tel-Aviv").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 Log.d("pttt", dataSnapshot.getValue().toString());
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d("pttt", "Value is: " + value);
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    Log.d("pttt", "ds: " + ds.getKey().toString() + " -- " + ds.getValue().toString());
+                    User user = ds.getValue(User.class);
+                    users.add(user);
+                    Log.d("pttt", "ds in: " + user.getName());
+                }
+
+                Log.d("pttt", "B - Number of users: " + users.size());
+
+//                //for one item:
+//                User user2 = dataSnapshot.getValue(User.class);
+//                Log.d("pttt", "2: " + user2.getName());
+//
+//                // for multi items:
+//                for (DataSnapshot child: dataSnapshot.getChildren()) {
+//                    Log.d("pttt", child.getValue().toString());
+//                    User user = child.getValue(User.class);
+//                    Log.d("pttt", user.getName());
+//                }
             }
 
             @Override
@@ -79,5 +121,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         ArrayList<Message> todayEvents = data.get(date);
+
+         */
     }
+
+    private void refreshList(ArrayList<User> users) {
+        // TODO: 2020-01-08 refresh list
+    }
+
 }
